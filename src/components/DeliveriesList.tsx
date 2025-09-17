@@ -49,7 +49,10 @@ function DeliveriesList(props: IProps) {
       <ol aria-label="Deliveries list" className="space-y-3">
         {initialDeliveries.map(item => (
           <li key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow-sm">
-            <div className="text-sm italic">Add the label and step number here (see mockup)</div>
+            <div className="mr-auto">
+              <div className="text-sm font-medium mb-1">{item.label}</div>
+              <div className="text-xs text-gray-500">Step: {item.step_number}</div>
+            </div>
 
             <div className="flex items-center gap-4 ml-4">
               <div className="text-center w-36">
