@@ -16,12 +16,15 @@ interface IProps {
   initialDeliveries: IDelivery[];
 }
 
-export default function DeliveriesList(props: IProps) {
+function DeliveriesList(props: IProps) {
   const { initialDeliveries } = props;
   // TODO: Implement component state and behavior.
 
-  return (
-    <div className="w-full">
+  /* --------------------------------*/
+  /* RENDER METHODS */
+  /* --------------------------------*/
+  function renderFilter() {
+    return (
       <div className="flex items-center gap-4 mb-4">
         <label htmlFor="filter" className="text-sm font-medium">
           Filter
@@ -38,7 +41,11 @@ export default function DeliveriesList(props: IProps) {
           <option value="done">Done</option>
         </select>
       </div>
+    );
+  }
 
+  function renderList() {
+    return (
       <ol aria-label="Deliveries list" className="space-y-3">
         {initialDeliveries.map(item => (
           <li key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow-sm">
@@ -82,6 +89,19 @@ export default function DeliveriesList(props: IProps) {
           </li>
         ))}
       </ol>
-    </div>
-  );
+    );
+  }
+
+  function render() {
+    return (
+      <div className="w-full">
+        {renderFilter()}
+        {renderList()}
+      </div>
+    );
+  }
+
+  return render();
 }
+
+export default DeliveriesList;
