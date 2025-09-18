@@ -35,6 +35,18 @@ function DeliveriesList(props: IProps) {
     resetDeliveriesProgress(initialDeliveries)
   );
 
+  function isProgressOptionDisabled(delivery: IDelivery, progress: Progress): boolean {
+    const deliveryIndex = deliveries.findIndex(item => item.id === delivery.id);
+
+    const arePrecedingStepsDone = deliveries
+      .slice(0, deliveryIndex)
+      .every(item => item.progress === "done");
+
+    return progress === "pending"
+      ? false
+      : !arePrecedingStepsDone || (progress === "done" && delivery.progress !== "current");
+  }
+
   function calcDeliveryProgress(
     currentProgress: Progress | string,
     newProgress: Progress
@@ -48,21 +60,15 @@ function DeliveriesList(props: IProps) {
 
   function updateDeliveryProgress(deliveryID: number, newProgress: Progress) {
     setDeliveries(currentValue => {
-      return currentValue.map((item, i) => {
+      return currentValue.map(item => {
         if (item.id === deliveryID) {
-          const arePrecedingStepDone = currentValue.slice(0, i).every(s => s.progress === "done");
+          const updatedProgress = calcDeliveryProgress(item.progress, newProgress);
 
-          if (!arePrecedingStepDone) {
-            return item;
-          } else {
-            const updatedProgress = calcDeliveryProgress(item.progress, newProgress);
-
-            return {
-              ...item,
-              progress: updatedProgress,
-              time: newProgress === "done" ? Date() : null
-            };
-          }
+          return {
+            ...item,
+            progress: updatedProgress,
+            time: newProgress === "done" ? Date() : null
+          };
         } else {
           return item;
         }
@@ -137,6 +143,7 @@ function DeliveriesList(props: IProps) {
                         name={`progress-${item.id}`}
                         checked={item.progress === progress.value}
                         onChange={() => updateDeliveryProgress(item.id, progress.value)}
+                        disabled={isProgressOptionDisabled(item, progress.value)}
                         className="mr-1"
                       />
                       {progress.label}
