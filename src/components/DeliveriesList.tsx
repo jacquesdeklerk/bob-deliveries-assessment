@@ -1,4 +1,5 @@
-import { IDelivery } from "../data/sampleDeliveries";
+import { useState } from "react";
+import { IDelivery, Progress } from "../data/sampleDeliveries";
 
 /**
  * SKELETON NOTE
@@ -12,13 +13,29 @@ import { IDelivery } from "../data/sampleDeliveries";
  *
  */
 
+type ProgressValue = {
+  value: Progress;
+  label: string;
+};
+
+const progressValues: ProgressValue[] = [
+  { value: "pending", label: "Pending" },
+  { value: "current", label: "Current" },
+  { value: "done", label: "Done" }
+];
+
 interface IProps {
   initialDeliveries: IDelivery[];
 }
 
 function DeliveriesList(props: IProps) {
   const { initialDeliveries } = props;
-  // TODO: Implement component state and behavior.
+
+  const [deliveries] = useState<IDelivery[]>(initialDeliveries);
+
+  function updateDeliveryProgress(deliveryId: number, newProgress: Progress) {
+    console.log(deliveryId, newProgress);
+  }
 
   /* --------------------------------*/
   /* RENDER METHODS */
@@ -47,7 +64,7 @@ function DeliveriesList(props: IProps) {
   function renderList() {
     return (
       <ol aria-label="Deliveries list" className="space-y-3">
-        {initialDeliveries.map(item => (
+        {deliveries.map(item => (
           <li key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow-sm">
             <div className="mr-auto">
               <div className="text-sm font-medium mb-1">{item.label}</div>
@@ -74,18 +91,18 @@ function DeliveriesList(props: IProps) {
 
               <div className="flex flex-col items-start gap-2 ml-2">
                 <div className="flex items-center gap-4">
-                  <label className="text-xs">
-                    <input type="radio" name={`progress-${item.id}`} className="mr-1" />
-                    Pending
-                  </label>
-                  <label className="text-xs">
-                    <input type="radio" name={`progress-${item.id}`} className="mr-1" />
-                    Current
-                  </label>
-                  <label className="text-xs">
-                    <input type="radio" name={`progress-${item.id}`} className="mr-1" />
-                    Done
-                  </label>
+                  {progressValues.map(progress => (
+                    <label key={progress.value} className="text-xs">
+                      <input
+                        type="radio"
+                        name={`progress-${item.id}`}
+                        checked={item.progress === progress.value}
+                        onChange={() => updateDeliveryProgress(item.id, progress.value)}
+                        className="mr-1"
+                      />
+                      {progress.label}
+                    </label>
+                  ))}
                 </div>
               </div>
             </div>
