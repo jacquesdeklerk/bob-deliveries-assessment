@@ -59,19 +59,31 @@ function DeliveriesList(props: IProps) {
   }
 
   function updateDeliveryProgress(deliveryID: number, newProgress: Progress) {
-    setDeliveries(currentValue => {
-      return currentValue.map(item => {
-        if (item.id === deliveryID) {
-          const updatedProgress = calcDeliveryProgress(item.progress, newProgress);
+    let updatedIndex: number;
+    let updatedProgress: Progress | string;
+    let updatedTime: string | null | undefined = null;
 
-          return {
-            ...item,
-            progress: updatedProgress,
-            time: newProgress === "done" ? Date() : null
-          };
+    setDeliveries(currentValue => {
+      return currentValue.map((item, i) => {
+        if (item.id === deliveryID) {
+          updatedIndex = i;
+          updatedProgress = calcDeliveryProgress(item.progress, newProgress);
+          updatedTime = newProgress === "done" ? Date() : null;
         } else {
-          return item;
+          updatedProgress = item.progress;
+          updatedTime = item.time;
+
+          if (updatedIndex !== undefined && i > updatedIndex) {
+            updatedProgress = "pending";
+            updatedTime = null;
+          }
         }
+
+        return {
+          ...item,
+          progress: updatedProgress,
+          time: updatedTime
+        };
       });
     });
   }
