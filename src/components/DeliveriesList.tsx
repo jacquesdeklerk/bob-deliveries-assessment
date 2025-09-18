@@ -31,17 +31,44 @@ interface IProps {
 function DeliveriesList(props: IProps) {
   const { initialDeliveries } = props;
 
-  const [deliveries, setDeliveries] = useState<IDelivery[]>(initialDeliveries);
+  const [deliveries, setDeliveries] = useState<IDelivery[]>(
+    resetDeliveriesProgress(initialDeliveries)
+  );
 
-  function updateDeliveryProgress(deliveryId: number, newProgress: Progress) {
+  function calcDeliveryProgress(
+    currentProgress: Progress | string,
+    newProgress: Progress
+  ): Progress | string {
+    if (newProgress === "done" && currentProgress !== "current") {
+      return currentProgress;
+    }
+
+    return newProgress;
+  }
+
+  function updateDeliveryProgress(deliveryID: number, newProgress: Progress) {
     setDeliveries(currentValue => {
-      return currentValue.map(item => {
-        if (item.id === deliveryId) {
-          return { ...item, progress: newProgress };
+      return currentValue.map((item, i) => {
+        if (item.id === deliveryID) {
+          const arePrecedingStepDone = currentValue.slice(0, i).every(s => s.progress === "done");
+
+          if (!arePrecedingStepDone) {
+            return item;
+          } else {
+            const updatedProgress = calcDeliveryProgress(item.progress, newProgress);
+
+            return { ...item, progress: updatedProgress };
+          }
         } else {
           return item;
         }
       });
+    });
+  }
+
+  function resetDeliveriesProgress(deliveries: IDelivery[]): IDelivery[] {
+    return deliveries.map(item => {
+      return { ...item, progress: "pending" };
     });
   }
 
