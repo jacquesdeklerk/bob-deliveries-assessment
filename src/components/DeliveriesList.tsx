@@ -57,7 +57,11 @@ function DeliveriesList(props: IProps) {
           } else {
             const updatedProgress = calcDeliveryProgress(item.progress, newProgress);
 
-            return { ...item, progress: updatedProgress };
+            return {
+              ...item,
+              progress: updatedProgress,
+              time: newProgress === "done" ? Date() : null
+            };
           }
         } else {
           return item;
