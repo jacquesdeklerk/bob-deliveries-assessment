@@ -31,10 +31,18 @@ interface IProps {
 function DeliveriesList(props: IProps) {
   const { initialDeliveries } = props;
 
-  const [deliveries] = useState<IDelivery[]>(initialDeliveries);
+  const [deliveries, setDeliveries] = useState<IDelivery[]>(initialDeliveries);
 
   function updateDeliveryProgress(deliveryId: number, newProgress: Progress) {
-    console.log(deliveryId, newProgress);
+    setDeliveries(currentValue => {
+      return currentValue.map(item => {
+        if (item.id === deliveryId) {
+          return { ...item, progress: newProgress };
+        } else {
+          return item;
+        }
+      });
+    });
   }
 
   /* --------------------------------*/
