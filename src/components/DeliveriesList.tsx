@@ -1,18 +1,6 @@
 import { useState } from "react";
 import { IDelivery, Progress } from "../data/sampleDeliveries";
 
-/**
- * SKELETON NOTE
- *
- * THIS FILE IS A SKELETON. Implement the logic as required.
- *
- * This starter intentionally omits some coding-standards so you can demonstrate how you'd apply them.
- * Please follow our coding standards as you implement the logic.
- *
- * Do not include solution code outside this file—implement logic here.
- *
- */
-
 type ProgressValue = {
   value: Progress;
   label: string;
@@ -33,6 +21,11 @@ function DeliveriesList(props: IProps) {
 
   const [deliveries, setDeliveries] = useState<IDelivery[]>(
     resetDeliveriesProgress(initialDeliveries)
+  );
+  const [filter, setFilter] = useState<"all" | "pending" | "current" | "done">("all");
+
+  const filteredDeliveries = deliveries.filter(item =>
+    filter === "all" ? true : item.progress === filter
   );
 
   function isProgressOptionDisabled(delivery: IDelivery, progress: Progress): boolean {
@@ -105,8 +98,9 @@ function DeliveriesList(props: IProps) {
         </label>
         <select
           id="filter"
+          value={filter}
+          onChange={e => setFilter(e.target.value as typeof filter)}
           className="px-2 py-1 border rounded-md bg-white text-sm"
-          defaultValue="all"
           aria-label="Filter deliveries"
         >
           <option value="all">All</option>
@@ -121,7 +115,7 @@ function DeliveriesList(props: IProps) {
   function renderList() {
     return (
       <ol aria-label="Deliveries list" className="space-y-3">
-        {deliveries.map(item => (
+        {filteredDeliveries.map(item => (
           <li key={item.id} className="flex items-center p-4 bg-white rounded-lg shadow-sm">
             <div className="mr-auto">
               <div className="text-sm font-medium mb-1">{item.label}</div>
