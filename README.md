@@ -16,6 +16,8 @@ OR
 git clone git@github.com:jacquesdeklerk/bob-deliveries-assessment.git
 ```
 
+THEN
+
 ```bash
 cd bob-deliveries-assessment
 ```
@@ -35,6 +37,8 @@ yarn install
 ```bash
 yarn start
 ```
+
+Follow instructions in terminal
 
 ## Design Notes
 
