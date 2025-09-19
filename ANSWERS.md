@@ -31,3 +31,8 @@ I used ChatGPT for:
 ## EXPLANATION
 
 A written explanation describing decisions, tradeoffs and what can be improved can be found in `EXPLANATION.md`.
+
+## OPTIONAL ITEMS
+
+- When all steps are `done`, a "Finished" banner and a "Start over" button that resets state to the initial values is displayed.
+  - resetDeliveriesProgress function was modified and renamed to be more reusable and also resets time values to null and used for resetting values "Start over" button click

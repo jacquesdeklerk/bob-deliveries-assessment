@@ -19,14 +19,14 @@ interface IProps {
 function DeliveriesList(props: IProps) {
   const { initialDeliveries } = props;
 
-  const [deliveries, setDeliveries] = useState<IDelivery[]>(
-    resetDeliveriesProgress(initialDeliveries)
-  );
+  const [deliveries, setDeliveries] = useState<IDelivery[]>(resetDeliveries());
   const [filter, setFilter] = useState<"all" | "pending" | "current" | "done">("all");
 
-  const filteredDeliveries = deliveries.filter(item =>
-    filter === "all" ? true : item.progress === filter
-  );
+  function resetDeliveries(): IDelivery[] {
+    return initialDeliveries.map(item => {
+      return { ...item, progress: "pending", time: null };
+    });
+  }
 
   function isProgressOptionDisabled(delivery: IDelivery, progress: Progress): boolean {
     const deliveryIndex = deliveries.findIndex(item => item.id === delivery.id);
@@ -81,10 +81,8 @@ function DeliveriesList(props: IProps) {
     });
   }
 
-  function resetDeliveriesProgress(deliveries: IDelivery[]): IDelivery[] {
-    return deliveries.map(item => {
-      return { ...item, progress: "pending" };
-    });
+  function restart() {
+    setDeliveries(resetDeliveries());
   }
 
   /* --------------------------------*/
@@ -113,6 +111,10 @@ function DeliveriesList(props: IProps) {
   }
 
   function renderList() {
+    const filteredDeliveries = deliveries.filter(item =>
+      filter === "all" ? true : item.progress === filter
+    );
+
     return (
       <ol aria-label="Deliveries list" className="space-y-3">
         {filteredDeliveries.map(item => (
@@ -164,9 +166,27 @@ function DeliveriesList(props: IProps) {
     );
   }
 
-  function render() {
+  function renderCompleteBanner() {
     return (
-      <div className="w-full">
+      <div className="absolute inset-0 flex flex-col items-center justify-center bg-white">
+        <h4 className="mb-4">Finished</h4>
+        <button
+          onClick={() => restart()}
+          type="button"
+          className="bg-blue-500 text-white px-4 py-2 rounded-full font-medium"
+        >
+          Start Over
+        </button>
+      </div>
+    );
+  }
+
+  function render() {
+    const allStepsCompleted = deliveries.every(item => item.progress === "done");
+
+    return (
+      <div className="w-full relative">
+        {allStepsCompleted && renderCompleteBanner()}
         {renderFilter()}
         {renderList()}
       </div>
