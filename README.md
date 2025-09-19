@@ -7,17 +7,30 @@ This is a small React + TypeScript + Tailwind CSS project implementing a **Deliv
 1. Clone the repo:
 
 ```bash
+git clone https://github.com/jacquesdeklerk/bob-deliveries-assessment.git
+```
+
+OR
+
+```bash
 git clone git@github.com:jacquesdeklerk/bob-deliveries-assessment.git
+```
+
+```bash
 cd bob-deliveries-assessment
 ```
 
-2. Install dependencies:
+## Use Yarn
+
+This project expects Yarn:
+
+1. Install dependencies:
 
 ```bash
 yarn install
 ```
 
-3. Run the development server:
+2. Run the development server:
 
 ```bash
 yarn start
